@@ -423,6 +423,9 @@ Backend settings are loaded from the environment or `backend/.env`. Frontend `NE
 | Frontend | `NEXT_PUBLIC_API_URL` | Required base URL for HTTP API calls | `https://api.example.com` |
 | Frontend | `NEXT_PUBLIC_WS_URL` | WebSocket URL for meeting signaling; derived from API URL if omitted | `wss://api.example.com` |
 | Frontend | `NEXT_PUBLIC_STUN_SERVER_URL` | Optional STUN server URL for WebRTC peer connections | `stun:stun.l.google.com:19302` |
+| Frontend | `NEXT_PUBLIC_TURN_SERVER_URL` | Optional TURN relay URL for restrictive networks | `turn:turn.example.com:3478` |
+| Frontend | `NEXT_PUBLIC_TURN_USERNAME` | Optional short-lived TURN username; sent to browsers | Provider-issued temporary username |
+| Frontend | `NEXT_PUBLIC_TURN_CREDENTIAL` | Optional short-lived TURN credential; sent to browsers | Provider-issued temporary credential |
 
 The backend also allows HTTPS `*.vercel.app` origins through a constrained CORS regular expression. The checked-in `.env.example` files use safe example values; replace them with deployment-specific values.
 
@@ -433,7 +436,7 @@ The backend also allows HTTPS `*.vercel.app` origins through a constrained CORS 
 - **Invite links:** The join page is `/j/{meeting_code}` and accepts a passcode in the `pwd` query parameter. **Current implementation discrepancy:** the backend invite-link helper returns a literal `?******` marker instead of `?pwd={passcode}`. The join modal also drops query parameters when it converts an invite URL to the pre-join route, and the pre-join screen has no passcode field. As a result, a passcode-protected meeting cannot reliably be joined through the current UI. Fix and verify this flow before relying on invite links.
 - **Time:** Scheduled meeting and booking timestamps are normalized to UTC by services and the frontend formats dates using browser-local date/time APIs. Scheduler availability uses the link's configured time zone.
 - **Live updates:** Meeting participants, chat, Team Chat, and collaborative whiteboard state use periodic polling (meeting chat and meeting whiteboard poll every two seconds; meeting participant state uses a three-second interval). Polling is straightforward for a small demo but adds request traffic and can show updates later than a persistent event connection. WebSockets are used for WebRTC signaling only.
-- **Media:** Camera, microphone, and screen capture depend on browser media APIs, permissions, and a secure context (HTTPS, or localhost). WebRTC uses peer-to-peer connections and an optional configured STUN server; no TURN server is configured in this repository.
+- **Media:** Camera, microphone, and screen capture depend on browser media APIs, permissions, and a secure context (HTTPS, or localhost). A shared screen is sent on a dedicated WebRTC track and shown as the main stage with participant thumbnails; only one participant may share at a time. WebSocket signaling and active-share state are kept in backend process memory, so horizontally scaled backend instances require a shared signaling service. WebRTC also uses STUN and optionally a TURN relay. STUN-only connections may fail across restrictive NATs or firewalls; configure a TURN provider for reliable deployment coverage. TURN credentials are exposed to clients, so use provider-issued short-lived credentials rather than a permanent secret.
 - **Simulated behavior:** Zoom Phone is explicitly a softphone simulation: it does not place real calls and voicemail playback is a UI simulation. A direct Team Chat conversation can receive a delayed automated sample reply when the seeded default user sends a message; this is not a live teammate or external messaging integration. Several settings such as cloud recording, remote control, and notification preferences are persisted controls, not integrations with external services.
 - **Hosting:** Free hosting plans may sleep and take time to wake. SQLite stored on an ephemeral deployment filesystem can be reset when an instance is restarted or redeployed; use persistent storage or a managed database if data must survive deployments. Startup seeding repopulates empty tables.
 
@@ -452,7 +455,7 @@ Configure `DATABASE_URL`, `FRONTEND_URL`, and a unique `JWT_SECRET`; configure `
 
 ### Frontend on Vercel
 
-Import the repository as a Next.js application with the **Root Directory** set to `frontend`. Use `npm run build` as the build command; Vercel runs the Next.js application on its managed platform. Set `NEXT_PUBLIC_API_URL` to the deployed backend base URL and set `NEXT_PUBLIC_WS_URL` to its `wss://` signaling URL. `NEXT_PUBLIC_STUN_SERVER_URL` is optional. These public values must be present when the frontend build runs.
+Import the repository as a Next.js application with the **Root Directory** set to `frontend`. Use `npm run build` as the build command; Vercel runs the Next.js application on its managed platform. Set `NEXT_PUBLIC_API_URL` to the deployed backend base URL and set `NEXT_PUBLIC_WS_URL` to its `wss://` signaling URL. `NEXT_PUBLIC_STUN_SERVER_URL` is optional. For restrictive networks, also set the TURN URL and short-lived credentials using `NEXT_PUBLIC_TURN_SERVER_URL`, `NEXT_PUBLIC_TURN_USERNAME`, and `NEXT_PUBLIC_TURN_CREDENTIAL`. These public values must be present when the frontend build runs.
 
 For self-hosting the built frontend, the available package commands are:
 

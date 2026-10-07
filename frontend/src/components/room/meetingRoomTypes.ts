@@ -11,6 +11,8 @@ export interface MeetingRoomStageProps {
   onViewChange: (view: "speaker" | "gallery") => void;
   localStream: MediaStream | null;
   remoteStreams: Map<number, MediaStream>;
+  remoteScreenStreams: Map<number, MediaStream>;
+  activeScreenSharerId: number | null;
   reactions: Record<number, FloatingReaction>;
   mirrorLocalVideo: boolean;
   virtualBackground: UserSettings["virtual_background"];

@@ -4,13 +4,16 @@ import { cn } from "@/lib/utils";
 import type { FloatingReaction, Participant } from "@/lib/types";
 import type { UserSettings } from "@/lib/types";
 
+import { ScreenShareStage } from "./ScreenShareStage";
 import { VideoTile } from "./VideoTile";
 
 interface VideoGridProps {
   participants: Participant[];
   localStream?: MediaStream | null;
   remoteStreams?: Map<number, MediaStream>;
-  localParticipantId?: number;
+  remoteScreenStreams?: Map<number, MediaStream>;
+  activeScreenSharerId?: number | null;
+  localParticipantId: number;
   screenStream?: MediaStream | null;
   onStopScreenShare?: () => void;
   view: "speaker" | "gallery";
@@ -27,6 +30,8 @@ export function VideoGrid({
   participants,
   localStream,
   remoteStreams = new Map(),
+  remoteScreenStreams = new Map(),
+  activeScreenSharerId = null,
   localParticipantId,
   screenStream,
   onStopScreenShare,
@@ -40,27 +45,36 @@ export function VideoGrid({
   onAudioOutputError,
 }: VideoGridProps) {
   const [featured, ...others] = participants;
+  const localSharing = Boolean(screenStream);
+  const screenSharerId =
+    activeScreenSharerId ?? (localSharing ? localParticipantId : null);
 
-  if (screenStream) {
+  if (screenSharerId !== null) {
+    const isLocalSharer = localSharing && screenSharerId === localParticipantId;
     return (
-      <div className="relative min-h-0 flex-1 p-3">
-        <video
-          ref={(element) => {
-            if (element && element.srcObject !== screenStream) element.srcObject = screenStream;
-          }}
-          autoPlay
-          muted
-          playsInline
-          className="size-full rounded-lg object-contain"
-          aria-label="Shared screen"
-        />
-        <div className="absolute left-6 top-6 flex items-center gap-3 rounded-md bg-black/70 px-3 py-2 text-sm">
-          <span>You are sharing your screen</span>
-          <button type="button" onClick={onStopScreenShare} className="rounded bg-zoom-red px-3 py-1 text-xs font-bold">
-            Stop share
-          </button>
-        </div>
-      </div>
+      <ScreenShareStage
+        stream={
+          isLocalSharer
+            ? (screenStream ?? null)
+            : (remoteScreenStreams.get(screenSharerId) ?? null)
+        }
+        sharerName={
+          participants.find((participant) => participant.id === screenSharerId)
+            ?.display_name ?? "A participant"
+        }
+        isLocalSharer={isLocalSharer}
+        onStopSharing={isLocalSharer ? onStopScreenShare : undefined}
+        participants={participants}
+        localStream={localStream ?? null}
+        remoteStreams={remoteStreams}
+        localParticipantId={localParticipantId}
+        reactions={reactions}
+        mirrorLocalVideo={mirrorLocalVideo}
+        virtualBackground={virtualBackground}
+        displayParticipantNames={displayParticipantNames}
+        speakerDeviceId={speakerDeviceId}
+        onAudioOutputError={onAudioOutputError}
+      />
     );
   }
 

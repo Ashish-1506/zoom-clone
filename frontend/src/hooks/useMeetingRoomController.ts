@@ -164,10 +164,16 @@ export function useMeetingRoomController(code: string): MeetingRoomState {
     [session],
   );
   const isHost = session?.participant.role === "host";
-  const remoteStreams = useWebRTC({
+  const webRTC = useWebRTC({
     code,
     participantId: session?.participant.id ?? null,
     localStream: media.stream,
+    screenStream,
+    onError: error,
+    onShareRejected: () => {
+      screenStream?.getTracks().forEach((track) => track.stop());
+      setScreenStream(null);
+    },
   });
 
   const handleParticipantsChange = useCallback(
@@ -418,7 +424,9 @@ export function useMeetingRoomController(code: string): MeetingRoomState {
       view,
       onViewChange: setView,
       localStream: media.stream,
-      remoteStreams,
+      remoteStreams: webRTC.remoteStreams,
+      remoteScreenStreams: webRTC.remoteScreenStreams,
+      activeScreenSharerId: webRTC.activeScreenSharerId,
       reactions: floatingReactions,
       mirrorLocalVideo: settings.mirror_video,
       virtualBackground: settings.virtual_background,

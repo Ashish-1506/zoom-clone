@@ -32,6 +32,8 @@ export function MeetingRoomStage(props: MeetingRoomStageProps) {
         participants={props.participants}
         localStream={props.localStream}
         remoteStreams={props.remoteStreams}
+        remoteScreenStreams={props.remoteScreenStreams}
+        activeScreenSharerId={props.activeScreenSharerId}
         reactions={props.reactions}
         mirrorLocalVideo={props.mirrorLocalVideo}
         virtualBackground={props.virtualBackground}
