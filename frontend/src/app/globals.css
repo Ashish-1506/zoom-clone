@@ -1,0 +1,142 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-zoom-blue: #0b5cff;
+  --color-zoom-blue-dark: #0845bf;
+  --color-zoom-blue-light: #e8f0ff;
+  --color-zoom-orange: #ff742e;
+  --color-zoom-orange-dark: #e6621f;
+  --color-zoom-bg: #f5f7fa;
+  --color-zoom-border: #e4e6eb;
+  --color-zoom-text: #232333;
+  --color-zoom-muted: #6e7377;
+  --color-room-bg: #1c1c1c;
+  --color-room-toolbar: #232323;
+  --color-zoom-red: #e02828;
+  --color-zoom-green: #2e8b57;
+  --font-sans: var(--font-lato), Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+}
+
+body {
+  min-height: 100vh;
+  background: #ffffff;
+  color: var(--color-zoom-text);
+  font-family: var(--font-lato), Inter, ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: #c9cdd4;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #aeb4bf;
+  background-clip: content-box;
+}
+
+* {
+  scrollbar-color: #c9cdd4 transparent;
+  scrollbar-width: thin;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-zoom-blue);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.mirror-video {
+  transform: scaleX(-1);
+}
+
+.dark {
+  color-scheme: dark;
+  --color-zoom-bg: #202124;
+  --color-zoom-border: #3c4043;
+  --color-zoom-text: #e8eaed;
+  --color-zoom-muted: #aeb4bb;
+  --color-zoom-blue-light: #182c4e;
+}
+
+.dark body {
+  background: #18191b;
+  color: var(--color-zoom-text);
+}
+
+.dark .bg-white {
+  background-color: #292a2d;
+}
+
+.dark .text-black {
+  color: #fff;
+}
+
+.dark input,
+.dark select,
+.dark textarea {
+  color-scheme: dark;
+}
+
+@keyframes reaction-float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.55);
+  }
+
+  12% {
+    opacity: 1;
+    transform: translateY(0) scale(1.1);
+  }
+
+  25% {
+    transform: translateY(-6px) scale(1);
+  }
+
+  78% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-72px) scale(0.85);
+  }
+}
+
+.reaction-float {
+  animation: reaction-float-up 3s ease-out both;
+}

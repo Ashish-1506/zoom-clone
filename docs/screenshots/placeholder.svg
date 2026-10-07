@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title description">
+  <title id="title">Screenshot placeholder</title>
+  <desc id="description">Replace this shared placeholder with screenshots from the running application.</desc>
+  <rect width="960" height="540" fill="#f5f7fa"/>
+  <rect x="32" y="32" width="896" height="476" rx="16" fill="#ffffff" stroke="#e4e6eb" stroke-width="2"/>
+  <circle cx="64" cy="64" r="7" fill="#ff742e"/>
+  <circle cx="88" cy="64" r="7" fill="#f4c542"/>
+  <circle cx="112" cy="64" r="7" fill="#2e8b57"/>
+  <rect x="64" y="104" width="832" height="1" fill="#e4e6eb"/>
+  <text x="480" y="254" fill="#232333" font-family="Arial, sans-serif" font-size="30" font-weight="700" text-anchor="middle">Screenshot placeholder</text>
+  <text x="480" y="298" fill="#6e7377" font-family="Arial, sans-serif" font-size="18" text-anchor="middle">Replace with a capture from the running application.</text>
+</svg>
