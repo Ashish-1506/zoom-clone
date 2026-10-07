@@ -498,18 +498,6 @@ npm run start
 
 Frontend routes include `/`, `/meetings`, `/schedule`, `/settings`, `/profile`, `/team-chat`, `/phone`, `/whiteboards`, `/whiteboards/[id]`, `/scheduler`, `/book/[slug]`, `/j/[code]`, `/meeting/[code]`, `/meeting/[code]/ended`, `/login`, `/signup`, and `/signed-out`.
 
-## Known limitations and future improvements
-
-- Fix the invite-link helper so it emits a valid `pwd` parameter, then verify copying and opening invitations end to end.
-- Replace `create_all` and compatibility `ALTER TABLE` logic with a managed migration tool for schema evolution.
-- Add a TURN server and handle WebRTC relay/network failure; signaling connections are held in process memory and are not shared across multiple backend instances.
-- Use persistent managed storage for production deployments rather than ephemeral local SQLite.
-- Replace simulated Phone calls/voicemail and Team Chat automated replies with real integrations if those workflows are required.
-- Replace polling with an event-based transport for lower-latency updates and reduced request traffic at larger scale.
-- Add authorization and ownership checks consistently before exposing this demo beyond its default-user workflow.
-- Replace screenshot placeholders with captures from the running application.
-- A subset of settings are saved as user preferences but do not control a corresponding external service or advanced browser behavior.
-
 ## Author
 
 - Name: Ashish Ranjan
