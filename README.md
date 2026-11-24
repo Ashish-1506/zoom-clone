@@ -1,4 +1,4 @@
-# Zoom Clone: Video Conferencing Platform (Scaler SDE Fullstack Assignment)
+# Zoom Clone: Video Conferencing Platform
 
 A Zoom Workplace-inspired web application for scheduling and joining meetings, managing meeting rooms, and using related collaboration tools. The frontend is built with Next.js and the API is built with FastAPI and SQLAlchemy.
 
